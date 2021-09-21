@@ -1,0 +1,24 @@
+local gettarget = loadstring(game:HttpGet(('https://raw.githubusercontent.com/yesok3877/Miscellaneous/master/Get-Closest-To-Cursor.lua')))();
+
+local libraries = game.ReplicatedStorage.Libraries;
+local weapon = require(libraries.Weapon);
+local fire = weapon.Fire;
+
+weapon.Fire = function(self, ...)
+   local args = {...};
+   local player = self.player;
+   local config = self.config;
+   if (player == game.Players.LocalPlayer) then
+       local target = gettarget();
+       local char = (target ~= nil and target.Character);
+       if (target and char.Humanoid.Health ~= 0) then
+           local head = char.Head;
+           local projectile = require(libraries.Projectile).new(player, args[1], args[2], config.gravityK);
+           local id = (args[4] - 1);
+           require(libraries.Gameplay).DoHit(id, head, head.Position, config.damage, projectile.velocity, id, projectile.pelletIdx, projectile.t);
+       end
+       self.maxAmmo = math.huge;
+       self.ammo = math.huge;
+   end
+   return fire(self, ...);
+end;
